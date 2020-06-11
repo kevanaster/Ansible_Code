@@ -1,0 +1,22 @@
+---
+- name: "Get current firewall cp config"
+  aruba_command:
+    commands:
+      - show firewall-cp
+  register: firewallcp_output
+
+
+- name: "Set facts about negating firewall cp config"
+  set_fact:
+     negate_firewallcp: "{{firewallcp_output.stdout[0] | aruba_negate_firewallcp}}"
+
+
+- name: "Configure firewall cp"
+  aruba_config:
+    parents: firewall cp
+    commands: "{{firewallcp_config}}"
+    match: exact
+    before: "{{negate_firewallcp}}"
+  notify: "Aruba Save Configuration"
+
+

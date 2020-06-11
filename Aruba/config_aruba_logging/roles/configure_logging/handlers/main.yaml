@@ -1,0 +1,8 @@
+---
+- name: Aruba Save Configuration
+  aruba_config:
+    save_when: always
+
+- name: IOS Save Configuration
+  ios_config:
+    save_when: always

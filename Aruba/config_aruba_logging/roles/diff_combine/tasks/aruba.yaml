@@ -1,0 +1,23 @@
+---
+- name: "Get current logging config"
+  aruba_command:
+    commands:
+      - show run | include 'logging '
+  register: logging_output
+
+- name: "Set facts about negating logging config"
+  set_fact:
+     logging_commands: "{{logging_output.stdout[0] | aruba_logging_diff(logging_config)}}"
+
+- debug:
+    var: logging_commands
+    
+
+- name: Output commands for host
+  copy:
+    content: "#####\n{{inventory_hostname}}\n#####\n{{'\n'.join(logging_commands)}}\n\n\n"
+    dest: "output/host_output/{{inventory_hostname}}.txt"
+  when: logging_commands != []
+
+
+

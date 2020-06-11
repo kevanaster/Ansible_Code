@@ -1,0 +1,4 @@
+---
+
+- name: Vendor diff
+  include_tasks: "{{ ansible_network_os }}.yaml"

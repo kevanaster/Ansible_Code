@@ -1,0 +1,45 @@
+{{ "---" }}
+hostname: "{{ inventory_hostname }}"
+store_num: "{{ storenum }}"
+masterip: "{{ master }}"
+location_type: "{{ location }}"
+default_gateway: "{{ gateway }}"
+airwave_ip: "{{ airwave }}"
+vlans:
+{% for vlan in _raw_params.split('!\n') %}
+{% if 'interface vlan ' in vlan and 'radius source-interface' not in vlan %}
+  - { vlan: "{{ vlan.split('vlan ')[1].splitlines()[0] }}",
+{% if 'ip address' in vlan %}
+{% if 'dhcp-client' in vlan %}
+      vlan_ip: "dhcp-client",
+      vlan_mask: " ",
+{% else %}
+      vlan_ip: "{{ vlan.split(' 255')[0].split('address ')[1] }}",
+      vlan_mask: "255{{ vlan.split(' 255')[1].splitlines()[0] }}",
+{% endif %}
+{% else %}
+      vlan_ip: " ",
+      vlan_mask: " ",
+{% endif %}
+{% if 'description' in vlan %}
+      vlan_desc: {{ vlan.split('description ')[1].splitlines()[0] }},
+{% else %}
+      vlan_desc: " ",
+{% endif %}
+{% if 'ip igmp snooping' in vlan %}
+      vlan_igmp: true,
+{% else %}
+      vlan_igmp: false,
+{% endif %}
+{% if 'helper-address' in vlan %}
+      vlan_helper: "{{ vlan.split('helper-address ')[1].splitlines()[0] }}",
+{% else %}
+      vlan_helper: false,
+{% endif %}
+{% if 'shutdown' in vlan %}
+      vlan_shut: true}
+{% else %}
+      vlan_shut: false}
+{% endif %}
+{% endif %}
+{% endfor %}

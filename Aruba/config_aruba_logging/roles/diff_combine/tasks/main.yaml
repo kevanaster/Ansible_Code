@@ -1,0 +1,4 @@
+- name: Assemble diff file
+  assemble:
+    src: output/host_output
+    dest: output/config_diff.txt

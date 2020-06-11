@@ -1,0 +1,29 @@
+---
+
+- name: Upload Clearpass Cert
+  hosts: lab
+  connection: local
+  gather_facts: no
+  strategy: free
+
+  vars_prompt:
+    - name: Username
+      prompt: "Username"
+      private: no
+    - name: Password
+      prompt: "Password"
+      private: yes 
+      confirm: yes
+
+  vars:
+    cli:
+      username: "{{ Username }}"
+      password: "{{ Password }}"
+      host: "{{ inventory_hostname }}"
+      port: 22
+      timeout: 30
+
+  tasks:
+    - import_role:
+        name: set_clearpass_cert
+

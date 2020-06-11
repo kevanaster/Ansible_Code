@@ -1,0 +1,28 @@
+---
+
+- name: Aruba Logging Update
+  hosts: <dynamic inventory term>
+  gather_facts: no
+
+  vars_prompt:
+    - name: ansible_user
+      prompt: "Username"
+      private: no
+    - name: ansible_password
+      prompt: "Password"
+      private: yes 
+      confirm: yes
+
+  vars:
+    provider:
+      username: "{{ansible_user}}"
+      password: "{{ansible_password}}"
+      host: "{{inventory_hostname}}"
+      port: 22
+      timeout: 30
+
+  tasks:
+    - name: Configure Logging
+      include_role:
+        name: configure_logging
+

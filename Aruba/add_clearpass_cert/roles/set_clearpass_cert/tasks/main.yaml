@@ -1,0 +1,20 @@
+---
+
+- name: "Add ClearPass Certificate"
+  aruba_command:
+    provider: "{{ cli }}"
+    commands:
+      - "copy scp: {{ scp_host}} {{ Username }} {{ cert }} flash: nordstrom.pfx"
+      - "{{ Password }}"
+      - "crypto pki-import pfx ServerCert Nordstrom_{{ cert_expire }} nordstrom.pfx {{ cert_pwd }}"
+
+- name: "Set ClearPass Captive Portal Cert"
+  aruba_config:
+    provider: "{{ cli }}"
+    commands:
+      - 'captive-portal-cert "Nordstrom_{{ cert_expire }}"'
+    parents: web-server profile
+    match: exact
+    before: 
+      - web-server profile
+      - no captive-portal-cert

@@ -1,0 +1,52 @@
+---
+
+- name: Gather Controller Facts
+  hosts: lab
+  connection: local
+  gather_facts: no
+  strategy: free
+
+  vars_prompt:
+    - name: username
+      prompt: "Username"
+      private: no
+    - name: password
+      prompt: "Password"
+      private: yes 
+      confirm: yes
+  vars:
+    cli:
+      username: "{{ username }}"
+      password: "{{ password }}"
+      host: "{{ inventory_hostname }}"
+      port: 22
+      timeout: 30
+
+  tasks:
+    - name: "Get Aruba Variables"
+      aruba_command:
+        provider: "{{ cli }}"
+        commands:
+          - show roleinfo | include masterip
+          - show location
+          - show running-config | include default-gateway
+          - REDACTED
+          - show run | begin 'interface vlan'
+      register: aruba_data
+    
+    # Using Jinja2 if/else logic to set no result to blank space
+    - set_fact:
+        master: "{% if aruba_data.stdout[0] == '' %} {% else %}{{ aruba_data.stdout[0].split(':')[1] }}{% endif %}"
+        storenum: REDACTED
+        location: "{% if aruba_data.stdout[1] == '' %} {% elif '\n' in aruba_data.stdout[1] %}{{ aruba_data.stdout[1].split('\n')[-1] }}{% else %}{{ aruba_data.stdout[1] }}{% endif %}"
+        gateway: "{% if aruba_data.stdout[2] == '' %} {% else %}{{ aruba_data.stdout[2].split()[-1] }}{% endif %}"
+        airwave: REDACTED
+
+    # Magic
+    # Splitting show run | begin interface vlan to only contain vlan data for templating 
+    - set_fact: "{{ aruba_data.stdout[4].split('\n!\n\n!\n')[0] }}"
+
+    - import_role:
+        name: generate_aruba_host_vars
+
+

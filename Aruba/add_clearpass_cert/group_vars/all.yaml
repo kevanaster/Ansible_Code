@@ -1,0 +1,6 @@
+---
+
+cert_sn: REDACTED # Serial for current cert
+scp_host: REDACTED # Server/IP to copy cert from
+cert: REDACTED # Where on scp_host the cert is located
+cert_expire: REDACTED # Expire date YYYYMMDD

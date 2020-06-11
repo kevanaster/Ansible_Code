@@ -1,0 +1,66 @@
+---
+- name: "Aruba - Set New Firmware"
+  hosts: lab
+  strategy: free
+  gather_facts: no
+  vars:
+    ansible_ssh_user: "{{ aruba_ssh_user }}"
+    ansible_ssh_pass: "{{ aruba_ssh_pass }}"
+    firmware_ver: "6.5.4.8"
+    firmware: "6.5.4.8_65873"
+
+  tasks:
+
+    - name: Define Provider
+      set_fact:
+        provider:
+          host: "{{ ansible_ssh_host }}"
+          username: "{{ ansible_ssh_user }}"
+          password: "{{ ansible_ssh_pass }}"
+
+    - name: "Get Current Version and Boot"
+      aruba_command:
+        commands:
+          - show version | i Aruba
+          - show boot
+      register: current_info
+
+    - set_fact:
+        current_version: "{{ current_info.stdout[0].split('Version ')[1] }}"
+        model: "{{ current_info.stdout[0].split('MODEL: Aruba')[1][:2] }}"
+        current_partition: "{{ current_info.stdout[1][-1:] }}"
+
+    - set_fact:
+        new_partition: "{% if current_partition=='0' %}1{% elif current_partition=='1' %}0{% endif %}"
+
+    - name: "SCP Copy Firmware"
+      aruba_command:
+        commands:
+          - "copy scp: 10.1.90.46 {{ ansible_ssh_user }} /opt/nsgtools/NSG_storage/Aruba_AOS_images/ArubaOS_{{ model }}xx_{{ firmware }} system: partition {{ new_partition }}"
+          - "{{ ansible_ssh_pass }}"
+      when: current_version != firmware_ver
+
+    - name: "Wait 5 Minutes"
+      wait_for:
+        delay: 300
+      when: current_version != firmware_ver
+
+    - name: "Get New Version and Boot"
+      aruba_command:
+        commands:
+          - show image version
+      register: new_info
+
+    - set_fact:
+        new_version: "{{ new_info.stdout_lines[0][2].split('ArubaOS ')[1].split(' (')[0] }}"
+      when: "'Default boot' in new_info.stdout_lines[0][1]"
+
+    - set_fact:
+        new_version: "{{ new_info.stdout_lines[0][8].split('ArubaOS ')[1].split(' (')[0] }}"
+      when: "'Default boot' in new_info.stdout_lines[0][7]"
+
+
+    - fail:
+        msg: "Firmware not upgraded"
+      when: new_version != firmware_ver
+

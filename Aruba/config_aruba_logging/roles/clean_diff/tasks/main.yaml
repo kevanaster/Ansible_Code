@@ -1,0 +1,12 @@
+---
+- name: Remove host_output dir
+  run_once: true
+  file:
+    path: output/host_output
+    state: absent
+
+- name: Create host_output dir
+  file:
+    path: output/host_output
+    state: directory
+    
