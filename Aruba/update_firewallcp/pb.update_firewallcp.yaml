@@ -1,0 +1,51 @@
+---
+
+- name: Aruba Diff
+  hosts: <dynamic inventory term>
+  gather_facts: no
+  connection: local
+
+  vars_prompt:
+    - name: ansible_user
+      prompt: "Username"
+      private: no
+    - name: ansible_password
+      prompt: "Password"
+      private: yes
+      confirm: yes
+
+  vars:
+    provider:
+      username: "{{ansible_user}}"
+      password: "{{ansible_password}}"
+      host: "{{inventory_hostname}}"
+      port: 22
+      timeout: 30
+
+  tasks:
+    - name: Get Running Config
+      aruba_command:
+        commands:
+          - encrypt disable 
+          - show run
+      register: running_config
+      
+    - name: Create Config Var
+      set_fact:
+        diff: "{{ current | aruba_conf_diff(new, keep_position)}}"
+      vars:
+        new: "{{ lookup('template', './config_files/firewallcp.j2') }}"
+        current: "{{ running_config.stdout[1] }}"
+        keep_position: "yes"
+
+    - name: Configure Aruba based on diff
+      aruba_config:
+        commands: "{{ diff | aruba_config_commands('firewall cp')}}"
+        parents: firewall cp
+      notify: Save Aruba
+      when: "'firewall cp' in diff"
+    
+  handlers:
+    - name: Save Aruba
+      aruba_config:
+        save_when: always

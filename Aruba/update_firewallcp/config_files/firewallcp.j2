@@ -1,0 +1,12 @@
+firewall cp
+   ipv4 permit 10.0.0.0 255.0.0.0 proto 6 ports 80 80
+   ipv4 permit 10.0.0.0 255.0.0.0 proto 6 ports 443 443
+   ipv4 permit 10.0.0.0 255.0.0.0 proto 6 ports 4343 4343
+   ipv4 permit 10.0.0.0 255.0.0.0 proto 17 ports 161 161
+   ipv4 permit 10.0.0.0 255.0.0.0 proto 6 ports 22 22
+   ipv4 deny any proto 6 ports 22 22
+   ipv4 deny any proto 6 ports 23 23
+   ipv4 deny any proto 6 ports 80 80
+   ipv4 deny any proto 6 ports 443 443
+   ipv4 deny any proto 6 ports 4343 4343
+   ipv4 deny any proto 17 ports 161 161
