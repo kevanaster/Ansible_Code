@@ -1,0 +1,5 @@
+router bgp 65513
+  bgp router-id 3.3.3.3
+  bgp log-neighbor-changes
+  neighbor 10.10.13.1 remote-as 65511
+  neighbor 10.10.23.2 remote-as 65512

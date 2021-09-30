@@ -1,0 +1,19 @@
+---
+asn: 65512
+rid: 2.2.2.2
+neighbors:
+  - ipaddr: 10.10.12.1
+    remote_asn: 65511
+  - ipaddr: 10.10.23.3
+    remote_asn: 65513
+interfaces:
+  GigabitEthernet3:
+    ipaddr: 10.10.23.2
+    mask: 255.255.255.248
+    description: Link to csr3
+    state: up
+  GigabitEthernet4:
+    ipaddr: 10.10.12.2
+    mask: 255.255.255.252
+    description: Link to csr1
+    state: up

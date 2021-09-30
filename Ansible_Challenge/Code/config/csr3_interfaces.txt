@@ -1,0 +1,6 @@
+interface GigabitEthernet2
+  ip address 10.10.13.3 255.255.255.248
+  description Link to csr1
+interface GigabitEthernet3
+  ip address 10.10.23.3 255.255.255.248
+  description Link to csr2

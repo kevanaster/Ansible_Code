@@ -1,0 +1,23 @@
+---
+
+- name: Validate Interfaces Playbook
+  hosts: routers
+  gather_facts: no
+  connection: local
+
+  vars:
+    provider:
+      username: "{{ansible_user}}"
+      password: "{{ansible_password}}"
+      host: "{{inventory_hostname}}"
+
+  tasks:
+    - name: Napalm validate lldp
+      napalm_validate:
+        validation_file: templates/validation/{{inventory_hostname}}_interfaces.yaml
+      register: validate_lldp
+
+    - name: Validate LLDP complies using NAPALM validate
+      fail:
+        msg: Not in compliance with validation file
+      when: not validate_lldp.compliance_report.complies

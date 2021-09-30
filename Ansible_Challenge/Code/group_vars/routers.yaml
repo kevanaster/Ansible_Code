@@ -1,0 +1,7 @@
+---
+ansible_user: cisco_user
+ansible_password: cisco123
+connection: network_cli
+ansible_network_os: ios
+dev_os: ios
+ansible_python_interpreter: /home/python/bin/python3

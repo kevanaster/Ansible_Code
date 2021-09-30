@@ -1,0 +1,17 @@
+---
+
+- name: Generate Configuration Playbook
+  hosts: routers
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Generate Interface Config based on template
+      template:
+        src: templates/interfaces.j2
+        dest: config/{{inventory_hostname}}_interfaces.txt
+
+    - name: Generate BGP Config based on template
+      template:
+        src: templates/bgp.j2
+        dest: config/{{inventory_hostname}}_bgp.txt

@@ -1,0 +1,13 @@
+{% for key, val in interfaces.items() -%}
+interface {{key}}
+{% if val.ipaddr is defined %}
+  ip address {{val.ipaddr}} {{val.mask}}
+{% else %}
+  no ip address
+{% endif %}
+{%if val.description is defined %}
+  description {{val.description}}
+{% else %}
+  no description
+{% endif %}
+{% endfor %}

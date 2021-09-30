@@ -1,0 +1,17 @@
+---
+
+- name: Configure BGP Playbook
+  hosts: routers
+  gather_facts: no
+  connection: local
+
+  vars:
+    provider:
+      username: "{{ansible_user}}"
+      password: "{{ansible_password}}"
+      host: "{{inventory_hostname}}"
+
+  tasks:
+    - name: Configure Interfaces
+      ios_config:
+        src: config/{{inventory_hostname}}_bgp.txt

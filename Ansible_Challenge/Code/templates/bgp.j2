@@ -1,0 +1,6 @@
+router bgp {{asn}}
+  bgp router-id {{rid}}
+  bgp log-neighbor-changes
+{% for item in neighbors %}
+  neighbor {{item.ipaddr}} remote-as {{item.remote_asn}}
+{% endfor %}

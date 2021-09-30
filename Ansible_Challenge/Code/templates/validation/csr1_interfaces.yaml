@@ -1,0 +1,8 @@
+---
+- get_lldp_neighbors:
+    GigabitEthernet2:
+      - hostname: csr3.company.com
+        port: Gi2
+    GigabitEthernet4:
+      - hostname: csr2.company.com
+        port: Gi4

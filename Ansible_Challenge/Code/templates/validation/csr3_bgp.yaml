@@ -1,0 +1,17 @@
+---
+- get_bgp_neighbors:
+    global:
+      router_id: 3.3.3.3
+      peers:
+        10.10.13.1:
+          is_enabled: true
+          is_up: true
+          remote_as: 65511
+          local_as: 65513
+          remote_id: 1.1.1.1
+        10.10.23.2:
+          is_enabled: true
+          is_up: true
+          remote_as: 65512
+          local_as: 65513
+          remote_id: 2.2.2.2

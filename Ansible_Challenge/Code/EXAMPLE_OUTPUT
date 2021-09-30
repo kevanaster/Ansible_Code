@@ -1,0 +1,57 @@
+ Ansible_Code/Ansible_Challenge/Code $ ./run.sh
+
+PLAY [Generate Configuration Playbook] **********************************************************************
+
+TASK [Generate Interface Config based on template] **********************************************************
+ok: [csr3]
+ok: [csr1]
+ok: [csr2]
+
+TASK [Generate BGP Config based on template] ****************************************************************
+ok: [csr3]
+ok: [csr2]
+ok: [csr1]
+
+PLAY [Configure Interfaces Playbook] ************************************************************************
+
+TASK [Configure Interfaces] *********************************************************************************
+ok: [csr2]
+ok: [csr1]
+ok: [csr3]
+
+PLAY [Validate Interfaces Playbook] *************************************************************************
+
+TASK [Napalm validate lldp] *********************************************************************************
+ok: [csr3]
+ok: [csr2]
+ok: [csr1]
+
+TASK [Validate LLDP complies using NAPALM validate] *********************************************************
+skipping: [csr1]
+skipping: [csr3]
+skipping: [csr2]
+
+PLAY [Configure BGP Playbook] *******************************************************************************
+
+TASK [Configure Interfaces] *********************************************************************************
+ok: [csr2]
+ok: [csr1]
+ok: [csr3]
+
+PLAY [Validate BGP Playbook] ********************************************************************************
+
+TASK [Napalm validate bgp] **********************************************************************************
+ok: [csr2]
+ok: [csr1]
+ok: [csr3]
+
+TASK [Validate BGP complies using NAPALM validate] **********************************************************
+skipping: [csr2]
+skipping: [csr1]
+skipping: [csr3]
+
+PLAY RECAP **************************************************************************************************
+csr1                       : ok=6    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+csr2                       : ok=6    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+csr3                       : ok=6    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+

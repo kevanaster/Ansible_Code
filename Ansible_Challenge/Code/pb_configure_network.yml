@@ -1,0 +1,7 @@
+---
+
+- import_playbook: pb.generate_configs.yaml
+- import_playbook: pb.configure_interfaces.yaml
+- import_playbook: pb.validate_interfaces.yaml
+- import_playbook: pb.configure_bgp.yaml
+- import_playbook: pb.validate_bgp.yaml
